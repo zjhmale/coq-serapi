@@ -6,6 +6,8 @@ OCB=ocamlbuild
 OCB_OPT=-use-ocamlfind -j 4 #-classic-display
 OPAMPATH=$(shell opam config var lib)
 
+COQPATH=/home/egallego/external/coq-git/
+
 all: sertop
 
 TARGET=native
@@ -18,10 +20,12 @@ endif
 
 serlib:
 	OCAMLFIND_IGNORE_DUPS_IN=$(OPAMPATH)/ocaml/compiler-libs/ \
+	OCAMLPATH=$(COQPATH)                                      \
 	$(OCB) $(OCB_OPT) $(INCLUDETOP) serlib/serlib.$(CMAEXT)
 
 sertop:
 	OCAMLFIND_IGNORE_DUPS_IN=$(OPAMPATH)/ocaml/compiler-libs/ \
+	OCAMLPATH=$(COQPATH)                                      \
 	$(OCB) $(OCB_OPT) $(INCLUDETOP) sertop/sertop.$(TARGET)
 
 
@@ -31,6 +35,7 @@ force:
 
 sertop_js.byte: force
 	OCAMLFIND_IGNORE_DUPS_IN=$(OPAMPATH)/ocaml/compiler-libs/ \
+	OCAMLPATH=$(COQPATH)                                      \
 	$(OCB) $(OCB_OPT) $(INCLUDETOP) sertop/sertop_js.byte
 
 JSDIR=coq-libjs
@@ -50,6 +55,7 @@ js-release:
 
 sercomp:
 	OCAMLFIND_IGNORE_DUPS_IN=$(OPAMPATH)/ocaml/compiler-libs/ \
+	OCAMLPATH=$(COQPATH)                                      \
 	$(OCB) $(OCB_OPT) $(INCLUDETOP) sertop/sercomp.$(TARGET)
 
 #####################################################
