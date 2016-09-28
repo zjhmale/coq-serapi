@@ -1,0 +1,30 @@
+opam-version: "1.2"
+maintainer:   "e@x80.org"
+authors:      "Emilio J. Gallego Arias"
+bug-reports:  "https://github.com/ejgallego/coq-serapi/issues"
+homepage:     "https://github.com/ejgallego/coq-serapi/"
+dev-repo:     "git+https://github.com/ejgallego/coq-serapi.git"
+license:      "GPL-3"
+
+name: "coq-serapi"
+version: "dev"
+
+build:   [make]
+install: [make "install" "DESTDIR=%{bin}%"]
+remove:  [make "unisntall" "DESTDIR=%{bin}%"]
+
+depends: [
+  "coq" {>= "8.6"}
+  "camlp5"
+  "cmdliner"
+  "base-unix"
+  "ocamlfind" {>= "1.5.1"}
+  "ocamlbuild"
+  "lwt" {>= "2.4.4"}
+  "ppx_sexp_conv"
+]
+
+tags: [
+      "keyword:toplevel"
+      "date:2016"
+]

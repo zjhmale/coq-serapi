@@ -6,7 +6,9 @@ OCB=ocamlbuild
 OCB_OPT=-use-ocamlfind -j 4 #-classic-display
 OPAMPATH=$(shell opam config var lib)
 
-COQPATH=/home/egallego/external/coq-git/
+# For OPAM-installed coq 8.6.dev
+COQPATH=
+# COQPATH=/home/egallego/external/coq-git/
 
 all: sertop
 

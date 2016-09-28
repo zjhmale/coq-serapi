@@ -6,7 +6,7 @@
 true: rectypes, thread, package(str), package(unix), package(threads)
 
 # Sertop/Serlib general flags
-true: warn(+1..49-4-44), warn_error(+1..49-42), bin_annot, annot, safe_string
+true: warn(+1..49-4-44), warn_error(+1..49-42), bin_annot, annot, safe_string, warn(-58)
 
 # This needs to go first to avoid flag precedence problems.
 <sertop/sertop_sexp.ml>: package(ppx_import), package(ppx_sexp_conv)
