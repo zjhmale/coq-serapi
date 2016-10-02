@@ -15,10 +15,30 @@
 
 open Sexplib.Std
 
+open Ser_loc
+open Ser_flags
 open Ser_names
 open Ser_constrexpr
 open Ser_tok
 open Ser_extend
+
+type notation_spec =
+  [%import: Notation_term.notation_spec
+  [@with
+    Loc.located  := located;
+  ]]
+  [@@deriving sexp]
+
+type syntax_modifier =
+  [%import: Notation_term.syntax_modifier
+  [@with
+    Loc.located  := located;
+    Flags.compat_version    := compat_version;
+    Extend.gram_assoc       := gram_assoc;
+    Extend.production_level := production_level;
+    Extend.simple_constr_prod_entry_key := simple_constr_prod_entry_key;
+  ]]
+  [@@deriving sexp]
 
 type grammar_constr_prod_item =
   [%import: Notation_term.grammar_constr_prod_item

@@ -24,12 +24,14 @@ open Ser_nametab
 (* open Ser_decl_kinds *)
 (* open Ser_evar_kinds *)
 open Ser_constr
+open Ser_constr_matching
 open Ser_genarg
 open Ser_libnames
 open Ser_genredexpr
-open Ser_glob_term
+(* open Ser_glob_term *)
 open Ser_pattern
 open Ser_constrexpr
+open Ser_tactypes
 
 type direction_flag =
   [%import: Tacexpr.direction_flag]
@@ -63,9 +65,9 @@ type clear_flag =
   [%import: Tacexpr.clear_flag]
   [@@deriving sexp]
 
-type debug =
-  [%import: Tacexpr.debug]
-  [@@deriving sexp]
+(* type debug = *)
+(*   [%import: Tacexpr.debug] *)
+(*   [@@deriving sexp] *)
 
 type goal_selector =
   [%import: Tacexpr.goal_selector
@@ -145,9 +147,9 @@ type 'a with_bindings_arg =
   ]]
   [@@deriving sexp]
 
-type multi =
-  [%import: Tacexpr.multi]
-  [@@deriving sexp]
+(* type multi = *)
+(*   [%import: Tacexpr.multi] *)
+(*   [@@deriving sexp] *)
 
 type 'a match_pattern =
   [%import: 'a Tacexpr.match_pattern
@@ -510,21 +512,13 @@ let gen_fun_ast_of_sexp (tac : Sexp.t)
 (* atomic                                                               *)
 (************************************************************************)
 
-(* Glob *)
-type glob_constr_and_expr =
-  [%import: Tacexpr.glob_constr_and_expr
-  [@with
-     Glob_term.glob_constr  := glob_constr;
-     Constrexpr.constr_expr := constr_expr;
-  ]]
-  [@@deriving sexp]
-
-type binding_bound_vars =
-  [%import: Tacexpr.binding_bound_vars
-  [@with
-     Names.Id.Set.t := id_set;
-  ]]
-  [@@deriving sexp]
+(* type binding_bound_vars = *)
+(*   [%import: Tacexpr.binding_bound_vars *)
+(*   [@with *)
+(*      Names.Id.Set.t := id_set; *)
+(*      Constr_matching.binding_bound_vars := binding_bound_vars; *)
+(*   ]] *)
+(*   [@@deriving sexp] *)
 
 type glob_constr_pattern_and_expr =
   [%import: Tacexpr.glob_constr_pattern_and_expr
@@ -662,35 +656,3 @@ let sexp_of_atomic_tactic_expr tac =
     sexp_of_unit
     sexp_of_tlevel
     tac
-
-(* Helpers for raw_red_expr *)
-type r_trm =
-  [%import: Tacexpr.r_trm
-  [@with
-     Constrexpr.constr_expr := constr_expr;
-  ]]
-  [@@deriving sexp]
-
-type r_cst =
-  [%import: Tacexpr.r_cst
-  [@with
-    Libnames.reference := reference;
-    Misctypes.or_by_notation := or_by_notation;
-  ]]
-  [@@deriving sexp]
-
-type r_pat =
-  [%import: Tacexpr.r_pat
-  [@with
-     Constrexpr.constr_expr := constr_expr;
-     Constrexpr.constr_pattern_expr := constr_pattern_expr;
-  ]]
-  [@@deriving sexp]
-
-type raw_red_expr =
-  [%import: Tacexpr.raw_red_expr
-  [@with
-     Genredexpr.red_expr_gen := red_expr_gen;
-  ]]
-  [@@deriving sexp]
-

@@ -25,9 +25,6 @@ open Sexplib.Conv
 type coq_object =
     CoqString   of string
   | CoqSList    of string list
-  | CoqRichpp   of Richpp.richpp
-  | CoqAnn      of Ppannotation.t Richpp.located Xml_datatype.gxml
-  (* | CoqRichXml  of Richpp.richpp *)
   | CoqLoc      of Loc.t
   | CoqAst      of Loc.t * Vernacexpr.vernac_expr
   | CoqOption   of Goptions.option_name * Goptions.option_state
@@ -41,9 +38,9 @@ type coq_object =
   | CoqNotation of Constrexpr.notation
   | CoqUnparsing of Notation.unparsing_rule * Notation.extra_unparsing_rules * Notation_term.notation_grammar
   (* | CoqPhyLoc  of Library.library_location * Names.DirPath.t * string (\* CUnix.physical_path *\) *)
-  | CoqGoal     of (Constr.constr * (Names.Id.t list * Constr.constr option * Constr.constr) list) Proof.pre_goals
-  | CoqExtGoal  of (Constrexpr.constr_expr *
-                    (Names.Id.t list * Constrexpr.constr_expr option * Constrexpr.constr_expr) list) Proof.pre_goals
+  | CoqGoal     of (Constr.constr * Context.Compacted.Declaration.t list) Proof.pre_goals
+  (* Extern goal: XXX just a trial *)
+  | CoqExtGoal  of (Constrexpr.constr_expr * unit list) Proof.pre_goals
 
 (******************************************************************************)
 (* Printing Sub-Protocol                                                      *)
@@ -53,8 +50,8 @@ type coq_object =
 type print_format =
   | PpSer
   | PpStr
-  | PpAnn
-  | PpRichpp
+  (* | PpAnn *)
+  (* | PpRichpp *)
 
 type print_opt = {
   pp_format : print_format  [@default PpStr];

@@ -115,3 +115,6 @@ type module_kind = Misctypes.module_kind
 val module_kind_of_sexp : Sexp.t -> module_kind
 val sexp_of_module_kind : module_kind -> Sexp.t
 
+type multi = Misctypes.multi
+val multi_of_sexp : Sexp.t -> multi
+val sexp_of_multi : multi -> Sexp.t

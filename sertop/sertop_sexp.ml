@@ -20,19 +20,17 @@ open Ser_loc
 open Ser_names
 open Ser_goptions
 open Ser_stateid
-open Ser_richpp
 open Ser_feedback
 open Ser_libnames
 open Ser_impargs
 open Ser_constr
+open Ser_context
 open Ser_constrexpr
 open Ser_globnames
 open Ser_proof
 open Ser_stm
 open Ser_tacenv
 open Ser_profile_ltac
-open Ser_xml
-open Ser_ppannotation
 open Ser_notation_term
 open Ser_notation
 open Ser_vernacexpr
@@ -53,8 +51,9 @@ let _ =
       | SP.NoSuchState sid ->
         Some (List [Atom "NoSuchState"; sexp_of_stateid sid])
       (* Errors *)
-      | CErrors.UserError(e,msg) ->
-        Some (List [Atom "Errors.UserError"; List [Atom e; sexp_of_std_ppcmds msg]])
+      | CErrors.UserError(hdr,msg) ->
+        let hdr = Option.default "" hdr in
+        Some (List [Atom "Errors.UserError"; List [Atom hdr; sexp_of_std_ppcmds msg]])
       | CErrors.AlreadyDeclared msg ->
         Some (List [Atom "Errors.AlreadyDeclared"; List [sexp_of_std_ppcmds msg]])
       (* Pretype Errors XXX what to do with _env, _envmap *)
@@ -94,8 +93,7 @@ type coq_object =
      Names.KerName.t               := kername;
      Profile_ltac.treenode         := ltacprof_treenode;
      Proof.pre_goals               := pre_goals;
-     Richpp.richpp                 := richpp;
-     Richpp.located                := located;
+     Context.Compacted.Declaration.t := context_compacted_declaration;
      Tacenv.ltac_entry             := ltac_entry;
      Xml_datatype.gxml             := gxml;
      Ppannotation.t                := ppannotation;

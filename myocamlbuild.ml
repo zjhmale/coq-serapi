@@ -1,6 +1,6 @@
 open Ocamlbuild_plugin
 
-let coq_location  = "/home/egallego/external/coq-git/"
+let coq_location  = "/home/egallego/external/coq-master/"
 
 let p s     = coq_location ^ s
 let q s lib = coq_location ^ s ^ "/" ^ lib

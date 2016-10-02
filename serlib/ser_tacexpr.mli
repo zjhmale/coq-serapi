@@ -47,9 +47,9 @@ type clear_flag = bool option
 val clear_flag_of_sexp : Sexp.t -> clear_flag
 val sexp_of_clear_flag : clear_flag -> Sexp.t
 
-type debug = Tacexpr.debug = Debug | Info | Off
-val debug_of_sexp : Sexp.t -> debug
-val sexp_of_debug : debug -> Sexp.t
+(* type debug = Tacexpr.debug = Debug | Info | Off *)
+(* val debug_of_sexp : Sexp.t -> debug *)
+(* val sexp_of_debug : debug -> Sexp.t *)
 
 type 'a core_destruction_arg = 'a Tacexpr.core_destruction_arg
 
@@ -139,9 +139,9 @@ type 'a with_bindings_arg = 'a Tacexpr.with_bindings_arg
 val with_bindings_arg_of_sexp : (Sexp.t -> 'a) -> Sexp.t -> 'a with_bindings_arg
 val sexp_of_with_bindings_arg : ('a -> Sexp.t) -> 'a with_bindings_arg -> Sexp.t
 
-type multi = Tacexpr.multi
-val multi_of_sexp : Sexp.t -> multi
-val sexp_of_multi : multi -> Sexp.t
+(* type multi = Tacexpr.multi *)
+(* val multi_of_sexp : Sexp.t -> multi *)
+(* val sexp_of_multi : multi -> Sexp.t *)
 
 type 'a match_pattern = 'a Tacexpr.match_pattern
 
@@ -293,8 +293,4 @@ val sexp_of_raw_atomic_tactic_expr : raw_atomic_tactic_expr -> Sexp.t
 type atomic_tactic_expr = Tacexpr.atomic_tactic_expr
 val atomic_tactic_expr_of_sexp : Sexp.t -> atomic_tactic_expr
 val sexp_of_atomic_tactic_expr : atomic_tactic_expr -> Sexp.t
-
-type raw_red_expr = Tacexpr.raw_red_expr
-val raw_red_expr_of_sexp : Sexp.t -> raw_red_expr
-val sexp_of_raw_red_expr : raw_red_expr -> Sexp.t
 

@@ -22,15 +22,15 @@ open Ser_flags
 open Ser_goptions
 open Ser_names
 open Ser_misctypes
+open Ser_notation_term
 open Ser_univ
 open Ser_conv_oracle
 open Ser_decl_kinds
 open Ser_genarg
 open Ser_libnames
-open Ser_extend
 open Ser_stateid
 open Ser_constrexpr
-open Ser_tacexpr
+open Ser_genredexpr
 
 type lident     = [%import: Vernacexpr.lident
     [@with Loc.t        := loc;
@@ -46,13 +46,13 @@ type lname      = [%import: Vernacexpr.lname
     ]]
   [@@deriving sexp]
 
-type lstring    = [%import: Vernacexpr.lstring
-    [@with Loc.t        := loc;
-           Loc.located  := located;
-           Names.Name.t := name;
-           Names.Id.t := id;
-    ]]
-  [@@deriving sexp]
+(* type lstring    = [%import: Vernacexpr.lstring *)
+(*     [@with Loc.t        := loc; *)
+(*            Loc.located  := located; *)
+(*            Names.Name.t := name; *)
+(*            Names.Id.t := id; *)
+(*     ]] *)
+(*   [@@deriving sexp] *)
 
 (* type lreference = [%import: Vernacexpr.lreference *)
 (*      [@with Names.Id.t := id; *)
@@ -140,6 +140,8 @@ type hints_expr =  [%import: Vernacexpr.hints_expr
             Libnames.reference := reference;
             Constrexpr.constr_expr := constr_expr;
             Tacexpr.raw_tactic_expr := raw_tactic_expr;
+            Tacexpr.raw_tactic_expr := raw_tactic_expr;
+            Genarg.raw_generic_argument := raw_generic_argument;
      ]]
   [@@deriving sexp]
 
@@ -196,7 +198,7 @@ type definition_expr =
   [@with
     Constrexpr.local_binder := local_binder;
     Constrexpr.constr_expr  := constr_expr;
-    Tacexpr.raw_red_expr := raw_red_expr;
+    Genredexpr.raw_red_expr := raw_red_expr;
   ]]
   [@@deriving sexp]
 
@@ -257,6 +259,7 @@ type decl_notation =
     Constrexpr.local_binder := local_binder;
     Constrexpr.constr_expr  := constr_expr;
     Constrexpr.recursion_order_expr := recursion_order_expr;
+    Notation_term.notation_spec := notation_spec;
   ]]
   [@@deriving sexp]
 
@@ -374,20 +377,20 @@ type proof_expr =
 (*   ]] *)
 (*   [@@deriving sexp] *)
 
-type syntax_modifier =
-  [%import: Vernacexpr.syntax_modifier
-  [@with Loc.t        := loc;
-         Loc.located  := located;
+(* type syntax_modifier = *)
+(*   [%import: Vernacexpr.syntax_modifier *)
+(*   [@with Loc.t        := loc; *)
+(*          Loc.located  := located; *)
 
-         Names.Id.t   := id;
+(*          Names.Id.t   := id; *)
 
-         Flags.compat_version    := compat_version;
+(*          Flags.compat_version    := compat_version; *)
 
-         Extend.production_level := production_level;
-         Extend.gram_assoc       := gram_assoc;
-         Extend.simple_constr_prod_entry_key := simple_constr_prod_entry_key;
-  ]]
-  [@@deriving sexp]
+(*          Extend.production_level := production_level; *)
+(*          Extend.gram_assoc       := gram_assoc; *)
+(*          Extend.simple_constr_prod_entry_key := simple_constr_prod_entry_key; *)
+(*   ]] *)
+(*   [@@deriving sexp] *)
 
 type proof_end =
   [%import: Vernacexpr.proof_end
@@ -493,9 +496,14 @@ type vernac_expr =
     Decl_kinds.assumption_object_kind := assumption_object_kind;
     Decl_kinds.private_flag           := private_flag;
 
+    Notation_term.notation_spec := notation_spec;
+    Notation_term.syntax_modifier := syntax_modifier;
+
     Goptions.option_name := option_name;
 
     Genarg.raw_generic_argument := raw_generic_argument;
+
+    Genredexpr.raw_red_expr := raw_red_expr;
 
     Misctypes.or_by_notation := or_by_notation;
     Misctypes.glob_level     := glob_level;
@@ -514,13 +522,13 @@ type vernac_expr =
     Univ.constraint_type    := constraint_type;
     ]]
   [@@deriving sexp]
-and vernac_argument_status =
-  [%import: Vernacexpr.vernac_argument_status
-  [@with
-    Loc.t             := loc;
-    Names.Name.t      := name;
-  ]]
-  [@@deriving sexp]
+(* and vernac_argument_status = *)
+(*   [%import: Vernacexpr.vernac_argument_status *)
+(*   [@with *)
+(*     Loc.t             := loc; *)
+(*     Names.Name.t      := name; *)
+(*   ]] *)
+(*   [@@deriving sexp] *)
 
 (* and vernac_list = *)
 (*   [%import: Vernacexpr.vernac_list] *)

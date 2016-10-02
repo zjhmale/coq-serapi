@@ -17,7 +17,7 @@ open Sexplib.Std
 
 open Ser_loc
 open Ser_xml
-open Ser_richpp
+open Ser_pp
 open Ser_stateid
 
 type level =
@@ -46,7 +46,7 @@ type feedback_content =
      Stateid.t := stateid;
      Loc.t := loc;
      Xml_datatype.xml := xml;
-     Richpp.richpp    := richpp;
+     Pp.std_ppcmds    := std_ppcmds;
   ]]
   [@@deriving sexp]
 

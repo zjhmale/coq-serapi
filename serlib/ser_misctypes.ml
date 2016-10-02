@@ -141,3 +141,6 @@ type module_kind =
   [%import: Misctypes.module_kind]
   [@@deriving sexp]
 
+type multi =
+  [%import: Misctypes.multi]
+  [@@deriving sexp]

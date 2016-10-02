@@ -93,10 +93,7 @@ exception NoSuchState of Stateid.t
 type coq_object =
   | CoqString   of string
   | CoqSList    of string list
-  | CoqRichpp   of Richpp.richpp
-  | CoqAnn      of Ppannotation.t Richpp.located Xml_datatype.gxml
   (* XXX: For xml-like printing, should be moved to an option... *)
-  (* | CoqRichXml  of Richpp.richpp *)
   | CoqLoc      of Loc.t
   | CoqAst      of Loc.t * Vernacexpr.vernac_expr
   | CoqOption   of Goptions.option_name * Goptions.option_state
@@ -110,10 +107,9 @@ type coq_object =
   | CoqNotation of Constrexpr.notation
   | CoqUnparsing of Notation.unparsing_rule * Notation.extra_unparsing_rules * Notation_term.notation_grammar
   (* Fixme *)
-  | CoqGoal     of (Constr.constr * (Names.Id.t list * Constr.constr option * Constr.constr) list) Proof.pre_goals
+  | CoqGoal     of (Constr.constr * Context.Compacted.Declaration.t list) Proof.pre_goals
   (* Extern goal: XXX just a trial *)
-  | CoqExtGoal  of (Constrexpr.constr_expr *
-                    (Names.Id.t list * Constrexpr.constr_expr option * Constrexpr.constr_expr) list) Proof.pre_goals
+  | CoqExtGoal  of (Constrexpr.constr_expr * unit list) Proof.pre_goals
 
 (******************************************************************************)
 (* Printing Sub-Protocol                                                      *)
@@ -121,11 +117,12 @@ type coq_object =
 
 let pp_goal_gen pr_c (g, hyps) =
   let open Pp      in
-  let pr_idl idl = prlist_with_sep (fun () -> str ", ") Names.Id.print idl in
-  let pr_lconstr_opt c = str " := " ++ pr_c c in
-  let pr_hdef = Option.cata pr_lconstr_opt (mt ())  in
-  let pr_hyp (idl, hdef, htyp) =
-    pr_idl idl ++ pr_hdef hdef ++ (str " : ") ++ pr_c htyp in
+  (* let pr_idl idl = prlist_with_sep (fun () -> str ", ") Names.Id.print idl in *)
+  (* let pr_lconstr_opt c = str " := " ++ pr_c c in *)
+  (* let pr_hdef  = Option.cata pr_lconstr_opt (mt ())  in *)
+  let pr_hyp _ = str "Port to new context API"       in
+  (* let pr_hyp (idl, hdef, htyp) = *)
+  (*   pr_idl idl ++ pr_hdef hdef ++ (str " : ") ++ pr_c htyp in *)
   pr_vertical_list pr_hyp hyps         ++
   str "============================\n" ++
     (* (let pr_lconstr t = *)
@@ -152,9 +149,6 @@ let gen_pp_obj (obj : coq_object) : Pp.std_ppcmds =
   match obj with
   | CoqString  s    -> Pp.str s
   | CoqSList   s    -> Pp.(pr_sequence str) s
-  | CoqRichpp  s    -> Pp.str (Richpp.raw_print s)
-  | CoqAnn     _    -> Pp.str "Fixme Ann"
-  (* | CoqRichXml x    -> Serapi_pp.pp_xml fmt (Richpp.repr x) *)
   | CoqLoc    _loc  -> Pp.mt ()
   | CoqAst    _     -> Pp.str "Fixme ast"
   | CoqOption (n,s) -> pp_opt n s
@@ -162,8 +156,8 @@ let gen_pp_obj (obj : coq_object) : Pp.std_ppcmds =
   | CoqExpr    e    -> Ppconstr.pr_lconstr_expr e
   | CoqTactic(kn,_) -> Names.KerName.print kn
   (* Fixme *)
-  | CoqGoal    g    -> Pp.pr_sequence (pp_goal_gen Printer.pr_lconstr)              g.Proof.fg_goals
-  | CoqExtGoal g    -> Pp.pr_sequence (pp_goal_gen Ppconstr.Richpp.pr_lconstr_expr) g.Proof.fg_goals
+  | CoqGoal    g    -> Pp.pr_sequence (pp_goal_gen Printer.pr_lconstr)       g.Proof.fg_goals
+  | CoqExtGoal g    -> Pp.pr_sequence (pp_goal_gen Ppconstr.pr_lconstr_expr) g.Proof.fg_goals
   | CoqProfData _pf -> Pp.str "FIXME UPSTREAM, provide pr_prof_results"
   | CoqQualId qid   -> Pp.str (Libnames.string_of_qualid qid)
   | CoqGlobRef _gr  -> Pp.str "FIXME GlobRef"
@@ -178,17 +172,10 @@ let gen_pp_obj (obj : coq_object) : Pp.std_ppcmds =
 let str_pp_obj fmt (obj : coq_object)  =
   Format.fprintf fmt "%a" (Pp.pp_with ?pp_tag:None) (gen_pp_obj obj)
 
-let ann_pp_obj (obj : coq_object)  =
-  let repr     = gen_pp_obj obj                  in
-  let annp obj = Pp.Tag.prj obj Ppannotation.tag in
-  Richpp.rich_pp annp repr
-
 (** Print output format  *)
 type print_format =
   | PpSer
   | PpStr
-  | PpAnn
-  | PpRichpp
 
 (* register printer *)
 
@@ -203,8 +190,6 @@ let obj_print pr_opt obj =
   let open Format in
   match pr_opt.pp_format with
   | PpSer    -> obj
-  | PpAnn    -> CoqAnn (ann_pp_obj obj)
-  | PpRichpp -> CoqRichpp (Richpp.richpp_of_pp (gen_pp_obj obj))
   | PpStr ->
     let mb      = pp_get_max_boxes     str_formatter () in
     let et      = pp_get_ellipsis_text str_formatter () in
@@ -282,8 +267,6 @@ let prefix_pred (prefix : string) (obj : coq_object) : bool =
   match obj with
   | CoqString  s    -> Extra.is_prefix s ~prefix
   | CoqSList   _    -> true     (* XXX *)
-  | CoqRichpp  _    -> true
-  | CoqAnn     _    -> true
   (* | CoqRichXml _    -> true *)
   | CoqLoc     _    -> true
   | CoqAst     _    -> true

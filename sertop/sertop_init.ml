@@ -97,7 +97,7 @@ let coq_init opts =
   (* We must prevent output to stdout when loading the libs... but it
    * will be lost.
    *)
-  Feedback.set_logger Feedback.feedback_logger;
+  (* Feedback.set_logger Feedback.feedback_logger; *)
 
   List.iter (fun (dp, p, in_exp) ->
       Library.require_library_from_dirpath [dp,p] in_exp
@@ -122,7 +122,7 @@ let coq_init opts =
   in
 
   (* Initialize logging. *)
-  Feedback.add_feeder opts.fb_handler;
+  ignore (Feedback.add_feeder opts.fb_handler);
 
   (**************************************************************************)
   (* Async setup                                                            *)
